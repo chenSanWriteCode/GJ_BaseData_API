@@ -16,7 +16,7 @@ namespace GJ_BaseData_API.Job
 
         public GJ_Driver_Job()
         {
-            timerJob.Interval = 10000;
+            timerJob.Interval = 60000;
             timerJob.AutoReset = true;
             timerJob.Elapsed += DriverJob_Elapsed;
         }
@@ -24,7 +24,7 @@ namespace GJ_BaseData_API.Job
         {
             ORACLEHelper context = new ORACLEHelper();
             DateTime current = DateTime.Now;
-            string sql = $"select b.bus_card_no 车牌, t.DRIVER_ID, t.tRADE_DATE|| t.TRADE_TIME tradeTime, t.DUTY_FLAG from MANAGE_REC_DRIVER_TOLED@ytiic t, bus_info @ytiic b  where  t.bus_id = b.bus_id where t.TRADE_TIME<={current.ToString("HHmmss")}";
+            string sql = $"select b.bus_card_no 车牌, t.DRIVER_ID, t.tRADE_DATE|| t.TRADE_TIME tradeTime, t.DUTY_FLAG from MANAGE_REC_DRIVER_TOLED@ytiic t, bus_info @ytiic b  where  t.bus_id = b.bus_id and t.tRADE_DATE='{current.ToString("yyyyMMdd")}' t.TRADE_TIME<='{current.ToString("HHmmss")}'";
             DataTable dt = new DataTable();
             try
             {
@@ -33,7 +33,7 @@ namespace GJ_BaseData_API.Job
                 {
                     List<DriverClock> data = TableToList_DriverClock(dt);
                     //TODO 调用java接口
-                    sql = $"delete from MANAGE_REC_DRIVER_TOLED@ytiic t where  t.TRADE_TIME<={current.ToString("HHmmss")}";
+                    sql = $"delete from MANAGE_REC_DRIVER_TOLED@ytiic t where  t.TRADE_TIME<='{current.ToString("HHmmss")}'";
                     context.ExecuteSql(sql);
                 }
             }
