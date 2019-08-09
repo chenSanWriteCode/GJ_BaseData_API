@@ -1,16 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Timers;
-using System.Web;
 using GJ_BaseData_API.Entity;
-using GJ_BaseData_API.HubProvider;
 using GJ_BaseData_API.Infrastructure;
 using log4net;
-using Microsoft.AspNet.SignalR;
 
 namespace GJ_BaseData_API.Job
 {
