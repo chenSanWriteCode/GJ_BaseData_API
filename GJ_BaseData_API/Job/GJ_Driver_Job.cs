@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Net.Http;
 using System.Timers;
 using GJ_BaseData_API.Entity;
 using GJ_BaseData_API.Infrastructure;
@@ -17,25 +18,30 @@ namespace GJ_BaseData_API.Job
         public GJ_Driver_Job()
         {
             timerJob.Interval = 10000;
-            timerJob.AutoReset = true;
+            timerJob.AutoReset = false;
             timerJob.Elapsed += DriverJob_Elapsed;
         }
-        private void DriverJob_Elapsed(object sender, ElapsedEventArgs e)
+        private async void DriverJob_Elapsed(object sender, ElapsedEventArgs e)
         {
             ORACLEHelper context = new ORACLEHelper();
             DateTime current = DateTime.Now;
             string sql = $"select b.bus_card_no 车牌, t.DRIVER_ID, t.tRADE_DATE|| t.TRADE_TIME tradeTime, t.DUTY_FLAG from MANAGE_REC_DRIVER_TOLED@ytiic t, bus_info @ytiic b  where  t.bus_id = b.bus_id where t.TRADE_TIME<={current.ToString("HHmmss")}";
+           
             DataTable dt = new DataTable();
             try
             {
                 dt = context.QueryTable(sql);
-                if (dt!=null && dt.Rows.Count>0)
+                if (dt != null && dt.Rows.Count > 0)
                 {
                     List<DriverClock> data = TableToList_DriverClock(dt);
                     //TODO 调用java接口
+                    HttpClient client = new HttpClient() { BaseAddress = new Uri(ConstInfo.URL_ZhongHangXun) };
+                    var response = await client.GetAsync("/bmpm/Driver/reportGetDriverInfo?jsonStr=测试一下get请求");
+                    var result = await response.Content.ReadAsAsync<HttpError>();
                     sql = $"delete from MANAGE_REC_DRIVER_TOLED@ytiic t where  t.TRADE_TIME<={current.ToString("HHmmss")}";
                     context.ExecuteSql(sql);
                 }
+
             }
             catch (Exception err)
             {

@@ -209,6 +209,7 @@
     <Compile Include="Entity\Depart.cs" />
     <Compile Include="Entity\Driver.cs" />
     <Compile Include="Entity\DriverClock.cs" />
+    <Compile Include="Entity\HttpError.cs" />
     <Compile Include="Entity\Line.cs" />
     <Compile Include="Entity\LineStation.cs" />
     <Compile Include="Entity\LineUD.cs" />
