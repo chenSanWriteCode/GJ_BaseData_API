@@ -19,7 +19,7 @@ namespace GJ_BaseData_API.Job
 
         public GJ_Driver_Job()
         {
-            timerJob.Interval = 10000;
+            timerJob.Interval = 60000;
             timerJob.AutoReset = true;
             timerJob.Elapsed += DriverJob_Elapsed;
         }
@@ -27,7 +27,7 @@ namespace GJ_BaseData_API.Job
         {
             ORACLEHelper context = new ORACLEHelper();
             DateTime current = DateTime.Now;
-            string sql = $"select lpad(OPER_ID,5,'0') 员工号,trim(OPER_NAME) 姓名,-1 线路id,flag isWork from DRIVER_INFO_CHANGE_TOLED@ytiic where UPDATE_TIME<=to_date('{current.ToString("yyyy-MM-dd HH:mm:ss")}','yyyy-MM-dd HH24:mi:ss')";
+            string sql = $"select lpad(OPER_ID,5,'0') 员工号,trim(OPER_NAME) 姓名,-1 线路id,flag isWork from DRIVER_INFO_CHANGE_TOLED@ytiic where UPDATE_TIME<=to_date('{current.ToString("yyyyMMdd HH:mm:ss")}','yyyy-MM-dd HH24:mi:ss')";
             DataTable dt = new DataTable();
             try
             {
