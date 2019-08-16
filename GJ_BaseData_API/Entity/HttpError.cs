@@ -7,7 +7,7 @@ namespace GJ_BaseData_API.Entity
 {
     public class HttpError
     {
-        public int code { get; set; }
+        public string code { get; set; }
         public string message { get; set; }
     }
 }

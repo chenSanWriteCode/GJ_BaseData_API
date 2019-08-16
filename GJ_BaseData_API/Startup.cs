@@ -1,8 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNet.SignalR;
-using Microsoft.Owin;
-using Microsoft.Owin.Cors;
+﻿using Microsoft.Owin;
 using Owin;
 
 [assembly: OwinStartup(typeof(GJ_BaseData_API.Startup))]

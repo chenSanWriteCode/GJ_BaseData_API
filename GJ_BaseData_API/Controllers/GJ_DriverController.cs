@@ -34,7 +34,7 @@ namespace GJ_BaseData_API.Controllers
             return Ok(result);
         }
 
-        [Route("api/GJ_Driver/GetByBusId/{id}")]
+        [Route("api/GJ_Driver/GetByBusId1/{id}")]
         [HttpGet]
         [Authorize]
         public async Task<IHttpActionResult> GetByBusId(int id)

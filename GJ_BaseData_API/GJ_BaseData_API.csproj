@@ -226,6 +226,7 @@
     <Compile Include="Infrastructure\LogTimes.cs" />
     <Compile Include="Infrastructure\ORACLEHelper.cs" />
     <Compile Include="Infrastructure\Result.cs" />
+    <Compile Include="Job\GJ_DriverColck_Job.cs" />
     <Compile Include="Job\GJ_Driver_Job.cs" />
     <Compile Include="Job\GJ_Job.cs" />
     <Compile Include="Models\TimeQueryModel.cs" />

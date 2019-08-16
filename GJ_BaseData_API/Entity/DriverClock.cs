@@ -11,6 +11,7 @@ namespace GJ_BaseData_API.Entity
         public string driverNo { get; set; }
         public string clockTime { get; set; }
         public int isWork { get; set; }
+        public string driverName { get; set; }
 
     }
 }

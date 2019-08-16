@@ -25,8 +25,8 @@ namespace GJ_BaseData_API.Filter
             if (!string.IsNullOrEmpty(userHostAddress) && IsIP(userHostAddress))
             {
 
-                //if (userHostAddress == "117.34.118.23"|| userHostAddress== "117.34.118.31"|| userHostAddress.Contains("218.201.129.")||userHostAddress.Contains("61.150."))
-                if (userHostAddress.Contains("218.201.129.") )
+                if (userHostAddress == "117.34.118.23"|| userHostAddress== "117.34.118.31"|| userHostAddress.Contains("218.201.129.")||userHostAddress.Contains("61.150."))
+                //if (userHostAddress.Contains("218.201.129.") )
                 {
                     return true;
                 }

@@ -9,7 +9,7 @@ namespace GJ_BaseData_API.Infrastructure
         public const string DepartRight = "(2, 3, 4, 5,8, 10)";//8 muping 11 fushan
         public const string DepartAll = "(1,2, 3, 4, 5,8, 10)";
         public readonly static string LogFlag = ConfigurationManager.AppSettings["LogFlag"].ToString();
-        public const string URL_ZhongHangXun = "http://cictec.imwork.net:28080";
+        public const string URL_ZhongHangXun = "http://117.34.118.23:9101"; //"http://cictec.imwork.net:28080";
         
 
         /// <summary>

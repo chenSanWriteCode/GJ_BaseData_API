@@ -1,23 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Timers;
+using System.Web;
 using GJ_BaseData_API.Entity;
 using GJ_BaseData_API.Infrastructure;
 using log4net;
+using Newtonsoft.Json;
 
 namespace GJ_BaseData_API.Job
 {
-    public class GJ_Driver_Job : GJ_Job
+    public class GJ_Driver_Job:GJ_Job
     {
         private ILog log = LogManager.GetLogger("GJ_Driver_Job");
-        //private IHubContext driverHub = GlobalHost.ConnectionManager.GetHubContext<GJ_DriverHub>();
-        //private static DateTime currentTime = DateTime.Now;
 
         public GJ_Driver_Job()
         {
-            timerJob.Interval = 60000;
+            timerJob.Interval = 10000;
             timerJob.AutoReset = true;
             timerJob.Elapsed += DriverJob_Elapsed;
         }
@@ -25,20 +27,30 @@ namespace GJ_BaseData_API.Job
         {
             ORACLEHelper context = new ORACLEHelper();
             DateTime current = DateTime.Now;
-            string sql = $"select b.bus_card_no 车牌, t.DRIVER_ID, t.tRADE_DATE|| t.TRADE_TIME tradeTime, t.DUTY_FLAG from MANAGE_REC_DRIVER_TOLED@ytiic t, bus_info @ytiic b  where  t.bus_id = b.bus_id and t.tRADE_DATE='{current.ToString("yyyyMMdd")}' t.TRADE_TIME<='{current.ToString("HHmmss")}'";
+            string sql = $"select lpad(OPER_ID,5,'0') 员工号,trim(OPER_NAME) 姓名,-1 线路id,flag isWork from DRIVER_INFO_CHANGE_TOLED@ytiic where UPDATE_TIME<=to_date('{current.ToString("yyyy-MM-dd HH:mm:ss")}','yyyy-MM-dd HH24:mi:ss')";
             DataTable dt = new DataTable();
             try
             {
                 dt = context.QueryTable(sql);
                 if (dt != null && dt.Rows.Count > 0)
                 {
-                    List<DriverClock> data = TableToList_DriverClock(dt);
-                    //TODO 调用java接口
+
+                    List<Driver> dataList = TableToList(dt);
                     HttpClient client = new HttpClient() { BaseAddress = new Uri(ConstInfo.URL_ZhongHangXun) };
-                    var response = await client.GetAsync("/bmpm/Driver/reportGetDriverInfo?jsonStr=测试一下get请求");
+                    var jsonStr = JsonConvert.SerializeObject(dataList);
+                    Dictionary<string, string> dict = new Dictionary<string, string>();
+                    dict.Add("jsonStr", jsonStr);//bmpm/Driver/reportDriverInfo
+                    var response = await client.PostAsync("/mediaplayer/Driver/reportDriverInfo", new FormUrlEncodedContent(dict));
                     var result = await response.Content.ReadAsAsync<HttpError>();
-                    sql = $"delete from MANAGE_REC_DRIVER_TOLED@ytiic t where  t.TRADE_TIME<='{current.ToString("HHmmss")}'";
-                    context.ExecuteSql(sql);
+                    if (response.StatusCode == HttpStatusCode.OK && result.code == "200")
+                    {
+                        sql = $"delete from DRIVER_INFO_CHANGE_TOLED@ytiic t where  t.UPDATE_TIME<to_date('{current.ToString("yyyy-MM-dd HH:mm:ss")}','yyyy-MM-dd HH24:mi:ss')";
+                        context.ExecuteSql(sql);
+                    }
+                    else
+                    {
+                        log.Error("调用接口失败：" + result.code + result.message);
+                    }
                 }
             }
             catch (Exception err)
@@ -46,22 +58,22 @@ namespace GJ_BaseData_API.Job
                 log.Error(err);
             }
         }
-        private List<DriverClock> TableToList_DriverClock(DataTable dt)
+        private List<Driver> TableToList(DataTable dt)
         {
-            List<DriverClock> result = new List<DriverClock>();
+            List<Driver> result = new List<Driver>();
             if (dt == null || dt.Rows.Count == 0)
             {
                 return result;
             }
-            DriverClock model;
+            Driver model;
             foreach (DataRow dr in dt.Rows)
             {
-                model = new DriverClock
+                model = new Driver
                 {
-                    driverNo = dr["DRIVER_ID"].ToString(),
-                    busNum = dr["车牌"].ToString(),
-                    clockTime = dr["tradeTime"].ToString(),
-                    isWork = Convert.ToInt32(dr["DUTY_FLAG"])
+                    driverNo = dr["员工号"]?.ToString(),
+                    driverName = dr["姓名"]?.ToString(),
+                    lineId = Convert.ToInt32(dr["线路id"]),
+                    isWork = Convert.ToInt32(dr["isWork"])
                 };
                 result.Add(model);
             }
