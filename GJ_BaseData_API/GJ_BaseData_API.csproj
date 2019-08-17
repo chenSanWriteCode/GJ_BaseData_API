@@ -186,6 +186,9 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Scripts\jquery-1.6.4-vsdoc.js" />
+    <Content Include="Quartz_Job.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Scripts\jquery-1.6.4.js" />
     <Content Include="Scripts\jquery-1.6.4.min.js" />
     <Content Include="Scripts\jquery.signalR-2.4.1.js" />

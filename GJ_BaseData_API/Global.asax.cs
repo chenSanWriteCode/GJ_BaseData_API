@@ -2,22 +2,32 @@
 using System.Timers;
 using System.Web.Http;
 using GJ_BaseData_API.Job;
+using Quartz;
+using Quartz.Impl;
 
 namespace GJ_BaseData_API
 {
     public class WebApiApplication : System.Web.HttpApplication
     {
-        private static GJ_Job driverClockJob = new GJ_DriverColck_Job();
-        private static GJ_Job driverJob =new GJ_Driver_Job();
         protected void Application_Start()
         {
             GlobalConfiguration.Configure(WebApiConfig.Register);
             string l4net = Server.MapPath("~/Web.config");
             log4net.Config.XmlConfigurator.ConfigureAndWatch(new System.IO.FileInfo(l4net));
-            driverClockJob.start();
-            driverJob.start();
+
+            IScheduler scheduler = StdSchedulerFactory.GetDefaultScheduler();
+            scheduler.Start();
+
+            var driverClockJob = JobBuilder.Create<GJ_DriverColck_Job>().Build();
+            var driverJob = JobBuilder.Create<GJ_Driver_Job>().Build();
+
+            var driverClockTrigger = TriggerBuilder.Create().WithSimpleSchedule(m => m.WithIntervalInSeconds(60).RepeatForever()).StartNow().Build();
+            var driverTrigger = TriggerBuilder.Create().WithSimpleSchedule(m => m.WithIntervalInSeconds(60).RepeatForever()).StartNow().Build();
+
+            scheduler.ScheduleJob(driverClockJob, driverClockTrigger);
+            scheduler.ScheduleJob(driverJob, driverTrigger);
         }
 
-        
+
     }
 }

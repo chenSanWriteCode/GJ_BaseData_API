@@ -10,20 +10,20 @@ using GJ_BaseData_API.Entity;
 using GJ_BaseData_API.Infrastructure;
 using log4net;
 using Newtonsoft.Json;
+using Quartz;
 
 namespace GJ_BaseData_API.Job
 {
-    public class GJ_Driver_Job:GJ_Job
+    public class GJ_Driver_Job:IJob
     {
         private ILog log = LogManager.GetLogger("GJ_Driver_Job");
 
-        public GJ_Driver_Job()
+        public void Execute(IJobExecutionContext context)
         {
-            timerJob.Interval = 60000;
-            timerJob.AutoReset = true;
-            timerJob.Elapsed += DriverJob_Elapsed;
+            push();
         }
-        private async void DriverJob_Elapsed(object sender, ElapsedEventArgs e)
+
+        private async void push()
         {
             ORACLEHelper context = new ORACLEHelper();
             DateTime current = DateTime.Now;
