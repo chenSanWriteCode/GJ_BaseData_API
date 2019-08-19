@@ -24,5 +24,25 @@
         <repeat-interval>60000</repeat-interval>
       </simple>
     </trigger>
+
+    <job>
+      <name>driverJob</name>
+      <group>driverGroup</group>
+      <description>push driver info</description>
+      <job-type>GJ_BaseData_API.Job.GJ_Driver_Job,GJ_BaseData_API</job-type>
+      <durable>true</durable>
+      <recover>false</recover>
+    </job>
+    <trigger>
+      <simple>
+        <name>driverTrigger</name>
+        <group>driverTriggerGroup</group>
+        <description>tirgger driver info</description>
+        <job-name>driverJob</job-name>
+        <job-group>driverGroup</job-group>
+        <repeat-count>-1</repeat-count>
+        <repeat-interval>60000</repeat-interval>
+      </simple>
+    </trigger>
   </schedule>
 </job-scheduling-data>

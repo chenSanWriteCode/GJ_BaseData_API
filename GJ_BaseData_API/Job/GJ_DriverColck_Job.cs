@@ -51,6 +51,7 @@ namespace GJ_BaseData_API.Job
                         context.ExecuteSql(sql);
                         sql = $"delete from MANAGE_REC_DRIVER_TOLED@ytiic t where  t.TRADE_TIME<='{current.ToString("HHmmss")}'";
                         int count =context.ExecuteSql(sql);
+                        log.Info($"推送成功，删除记录{count}条");
                     }
                     else
                     {
