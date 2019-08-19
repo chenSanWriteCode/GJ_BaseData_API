@@ -26,6 +26,19 @@ namespace GJ_BaseData_API
 
             scheduler.ScheduleJob(driverClockJob, driverClockTrigger);
             scheduler.ScheduleJob(driverJob, driverTrigger);
+            //Scheduler();
+        }
+        private void Scheduler()
+        {
+            var factory = new StdSchedulerFactory();
+            //new System.Collections.Specialized.NameValueCollection()
+            //{
+            //    { "quartz.plugin.xml.type","Quartz.Plugin.Xml.XMLSchedulingDataProcessorPlugin,Quartz"},
+            //        { "quartz.plugin.xml.fileNames","~/Quartz_Job.xml" }
+            //}
+            IScheduler scheduler = factory.GetScheduler();
+            
+            scheduler.Start();
         }
 
 
