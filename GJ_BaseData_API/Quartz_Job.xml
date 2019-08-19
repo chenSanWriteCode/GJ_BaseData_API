@@ -6,23 +6,23 @@
 
   <schedule>
     <job>
-      <name>sampleJob</name>
-      <group>sampleGroup</group>
-      <description>Sample job for Quartz Server</description>
-      <job-type>ConsoleApplication5.HelloJob,ConsoleApplication5</job-type>
+      <name>GJ_DriverColck_Job</name>
+      <group></group>
+      <description></description>
+      <job-type></job-type>
       <durable>true</durable>
       <recover>false</recover>
     </job>
     <trigger>
       <simple>
-        <name>sampleSimpleTrigger</name>
-        <group>sampleSimpleGroup</group>
-        <description>Simple trigger to simply fire sample job</description>
-        <job-name>sampleJob</job-name>
-        <job-group>sampleGroup</job-group>
+        <name>trigger_driverClock</name>
+        <group></group>
+        <description></description>
+        <job-name>GJ_Driver_Job</job-name>
+        <job-group></job-group>
         <misfire-instruction>SmartPolicy</misfire-instruction>
         <repeat-count>-1</repeat-count>
-        <repeat-interval>1000</repeat-interval>
+        <repeat-interval>60000</repeat-interval>
       </simple>
     </trigger>
   </schedule>
